@@ -3,17 +3,16 @@
 
 using namespace std;
 
-// Maximum capacity for array storage
 const int MAX_COURSES = 5;
 
 // ======================================================
-// FEATURE 1: Student Academic Profile (UMS-3)
+// FEATURE 1 & 3: Student Profile & Registration Logic
 // ======================================================
 struct Student {
     string studentID;
     string name;
     string department;
-    string registeredCourses[MAX_COURSES]; // Array instead of vector
+    string registeredCourses[MAX_COURSES];
     int courseCount = 0;
     
     void displayProfile() const {
@@ -36,7 +35,7 @@ struct Student {
 };
 
 // ======================================================
-// FEATURE 2: Faculty Management (UMS-2)
+// FEATURE 2: Faculty Management
 // ======================================================
 struct Faculty {
     string facultyID;
@@ -57,7 +56,7 @@ struct Faculty {
 };
 
 // ======================================================
-// FEATURE 3: Course Registration System (UMS-1)
+// COURSE REGISTRATION SYSTEM WITH VALIDATION RULES
 // ======================================================
 class CourseRegistrationSystem {
 private:
@@ -68,24 +67,20 @@ public:
     CourseRegistrationSystem(int capacity, int enrolled) 
         : maxCapacity(capacity), currentEnrolled(enrolled) {}
 
-    // Validation logic for registration (TDD & Pair Programming logic)
     bool registerCourse(Student& student, const string& courseCode) {
         cout << "\nAttempting registration for " << student.name 
              << " in course: " << courseCode << "...\n";
 
-        // Capacity check validation
         if (currentEnrolled >= maxCapacity) {
             cout << "[ERROR]: Course capacity is FULL! Registration failed.\n";
             return false;
         }
 
-        // Student array limit check
         if (student.courseCount >= MAX_COURSES) {
             cout << "[ERROR]: Student course limit reached.\n";
             return false;
         }
 
-        // Duplicate registration check validation
         for (int i = 0; i < student.courseCount; i++) {
             if (student.registeredCourses[i] == courseCode) {
                 cout << "[ERROR]: Student already registered for this course.\n";
@@ -93,7 +88,6 @@ public:
             }
         }
 
-        // Successful enrollment into array
         student.registeredCourses[student.courseCount] = courseCode;
         student.courseCount++;
         currentEnrolled++;
@@ -102,31 +96,26 @@ public:
     }
 };
 
-// ======================================================
-// MAIN EXECUTION LOGIC
-// ======================================================
 int main() {
     cout << "==================================================\n";
     cout << "     UNIVERSITY MANAGEMENT SYSTEM (UMS) - AGILE  \n";
     cout << "==================================================\n";
 
-    // 1. Initialize Student and Faculty Profile
-    Student student1 = {"ST-101", "Zainab Naveed", "Computer Science"};
-    Faculty faculty1 = {"FC-201", "Malik Muzammil", "Software Engineering", "CS-101"};
+    // Team members testing student registration logic
+    Student student1 = {"ST-101", "Malik Muzammil", "Computer Science"};
+    Student student2 = {"ST-102", "Zainab Naveed", "Software Engineering"};
+    Faculty instructor = {"FC-201", "Dr. Ahmad", "Computer Science", "CS-101"};
 
-    // Display initial state
-    faculty1.displayFacultyDetails();
-    student1.displayProfile();
+    instructor.displayFacultyDetails();
+    
+    CourseRegistrationSystem registrationSystem(30, 28);
 
-    // 2. Initialize Course Registration System (Capacity: 30, Enrolled: 29)
-    CourseRegistrationSystem registrationSystem(30, 29);
-
-    // 3. Register Student for CS-101 (Should succeed)
+    // Registering both team members as students in the test system
     registrationSystem.registerCourse(student1, "CS-101");
     student1.displayProfile();
 
-    // 4. Try registering for CS-101 again (Should trigger duplicate validation error)
-    registrationSystem.registerCourse(student1, "CS-101");
+    registrationSystem.registerCourse(student2, "CS-101");
+    student2.displayProfile();
 
     return 0;
 }
