@@ -25,7 +25,6 @@ public:
     }
 
     string getName() { return name; }
-    int getCourseCount() { return courseCount; }
 
     bool addCourse(string courseCode) {
         if (courseCount >= MAX_COURSES) {
@@ -101,13 +100,11 @@ public:
     bool registerStudentToCourse(Student &student, string courseCode) {
         cout << "\n[System] Registering " << student.getName() << " for " << courseCode << "...\n";
 
-        // Validation Rule: Capacity Check
         if (currentEnrolled >= maxCourseCapacity) {
             cout << "[System Error] Registration Failed: Course capacity is full!\n";
             return false;
         }
 
-        // Add course to student profile
         if (student.addCourse(courseCode)) {
             currentEnrolled++;
             cout << "[System Success] " << student.getName() << " successfully registered for " << courseCode << "!\n";
@@ -118,34 +115,27 @@ public:
     }
 };
 
-// ======================================================
-// MAIN EXECUTION LOGIC
-// ======================================================
 int main() {
     cout << "==========================================\n";
     cout << "      UNIVERSITY MANAGEMENT SYSTEM        \n";
     cout << "==========================================\n";
 
-    // 1. Create Objects for Epic 3 (Student) and Epic 2 (Faculty)
+    // Objects
     Student student1("ST101", "Malik Muzammil", "Computer Science");
     Student student2("ST102", "Zainab Naveed", "Software Engineering");
+    Student student3("ST103", "Ali Khan", "Data Science"); // Added by Zainab
+    
     Faculty faculty1("FC201", "Dr. Ahmad", "Computer Science", "CS101");
 
-    // Display initial objects
     student1.displayProfile();
     student2.displayProfile();
+    student3.displayProfile(); // Display student3
     faculty1.displayFaculty();
 
-    // 2. Create Object for Epic 1 (University Management)
-    UniversityManagement ums("UMS Core System", 30, 29); // Capacity: 30, Current Enrolled: 29
+    UniversityManagement ums("UMS Core System", 30, 29);
 
-    // 3. Register Student 1 (Succeeds - Slot available)
     ums.registerStudentToCourse(student1, "CS101");
-    student1.displayProfile();
-
-    // 4. Register Student 2 (Fails - Course capacity full)
     ums.registerStudentToCourse(student2, "CS101");
-    student2.displayProfile();
 
     return 0;
 }
