@@ -6,23 +6,43 @@ using namespace std;
 const int MAX_COURSES = 5;
 
 // ======================================================
-// FEATURE 1 & 3: Student Profile & Registration Logic
+// EPIC 3: Student Academic Profile
 // ======================================================
-struct Student {
+class Student {
+private:
     string studentID;
     string name;
     string department;
     string registeredCourses[MAX_COURSES];
-    int courseCount = 0;
-    
-    void displayProfile() const {
-        cout << "\n========================================\n";
-        cout << "         STUDENT ACADEMIC PROFILE       \n";
-        cout << "========================================\n";
-        cout << "ID         : " << studentID << "\n";
-        cout << "Name       : " << name << "\n";
-        cout << "Department : " << department << "\n";
-        cout << "Courses Enrolled (" << courseCount << "): ";
+    int courseCount;
+
+public:
+    Student(string id, string n, string dept) {
+        studentID = id;
+        name = n;
+        department = dept;
+        courseCount = 0;
+    }
+
+    string getName() { return name; }
+    int getCourseCount() { return courseCount; }
+
+    bool addCourse(string courseCode) {
+        if (courseCount >= MAX_COURSES) {
+            cout << "Error: Maximum course limit reached for " << name << "\n";
+            return false;
+        }
+        registeredCourses[courseCount] = courseCode;
+        courseCount++;
+        return true;
+    }
+
+    void displayProfile() {
+        cout << "\n--- Student Profile ---" << "\n";
+        cout << "ID: " << studentID << "\n";
+        cout << "Name: " << name << "\n";
+        cout << "Department: " << department << "\n";
+        cout << "Courses Enrolled: ";
         if (courseCount == 0) {
             cout << "None";
         } else {
@@ -30,91 +50,101 @@ struct Student {
                 cout << registeredCourses[i] << " ";
             }
         }
-        cout << "\n========================================\n";
+        cout << "\n-----------------------\n";
     }
 };
 
 // ======================================================
-// FEATURE 2: Faculty Management
+// EPIC 2: Faculty Management
 // ======================================================
-struct Faculty {
+class Faculty {
+private:
     string facultyID;
     string name;
     string department;
     string assignedCourse;
 
-    void displayFacultyDetails() const {
-        cout << "\n========================================\n";
-        cout << "           FACULTY DETAILS              \n";
-        cout << "========================================\n";
-        cout << "Faculty ID : " << facultyID << "\n";
-        cout << "Name       : " << name << "\n";
-        cout << "Department : " << department << "\n";
-        cout << "Assigned   : " << assignedCourse << "\n";
-        cout << "========================================\n";
+public:
+    Faculty(string id, string n, string dept, string course) {
+        facultyID = id;
+        name = n;
+        department = dept;
+        assignedCourse = course;
+    }
+
+    void displayFaculty() {
+        cout << "\n--- Faculty Details ---" << "\n";
+        cout << "ID: " << facultyID << "\n";
+        cout << "Name: " << name << "\n";
+        cout << "Department: " << department << "\n";
+        cout << "Assigned Course: " << assignedCourse << "\n";
+        cout << "-----------------------\n";
     }
 };
 
 // ======================================================
-// COURSE REGISTRATION SYSTEM WITH VALIDATION RULES
+// EPIC 1: Course Registration & University Management
 // ======================================================
-class CourseRegistrationSystem {
+class UniversityManagement {
 private:
-    int maxCapacity;
+    string systemName;
+    int maxCourseCapacity;
     int currentEnrolled;
 
 public:
-    CourseRegistrationSystem(int capacity, int enrolled) 
-        : maxCapacity(capacity), currentEnrolled(enrolled) {}
+    UniversityManagement(string name, int maxCap, int enrolled) {
+        systemName = name;
+        maxCourseCapacity = maxCap;
+        currentEnrolled = enrolled;
+    }
 
-    bool registerCourse(Student& student, const string& courseCode) {
-        cout << "\nAttempting registration for " << student.name 
-             << " in course: " << courseCode << "...\n";
+    bool registerStudentToCourse(Student &student, string courseCode) {
+        cout << "\n[System] Registering " << student.getName() << " for " << courseCode << "...\n";
 
-        if (currentEnrolled >= maxCapacity) {
-            cout << "[ERROR]: Course capacity is FULL! Registration failed.\n";
+        // Validation Rule: Capacity Check
+        if (currentEnrolled >= maxCourseCapacity) {
+            cout << "[System Error] Registration Failed: Course capacity is full!\n";
             return false;
         }
 
-        if (student.courseCount >= MAX_COURSES) {
-            cout << "[ERROR]: Student course limit reached.\n";
-            return false;
+        // Add course to student profile
+        if (student.addCourse(courseCode)) {
+            currentEnrolled++;
+            cout << "[System Success] " << student.getName() << " successfully registered for " << courseCode << "!\n";
+            return true;
         }
 
-        for (int i = 0; i < student.courseCount; i++) {
-            if (student.registeredCourses[i] == courseCode) {
-                cout << "[ERROR]: Student already registered for this course.\n";
-                return false;
-            }
-        }
-
-        student.registeredCourses[student.courseCount] = courseCode;
-        student.courseCount++;
-        currentEnrolled++;
-        cout << "[SUCCESS]: Registration approved for " << courseCode << "!\n";
-        return true;
+        return false;
     }
 };
 
+// ======================================================
+// MAIN EXECUTION LOGIC
+// ======================================================
 int main() {
-    cout << "==================================================\n";
-    cout << "     UNIVERSITY MANAGEMENT SYSTEM (UMS) - AGILE  \n";
-    cout << "==================================================\n";
+    cout << "==========================================\n";
+    cout << "      UNIVERSITY MANAGEMENT SYSTEM        \n";
+    cout << "==========================================\n";
 
-    // Team members testing student registration logic
-    Student student1 = {"ST-101", "Malik Muzammil", "Computer Science"};
-    Student student2 = {"ST-102", "Zainab Naveed", "Software Engineering"};
-    Faculty instructor = {"FC-201", "Dr. Ahmad", "Computer Science", "CS-101"};
+    // 1. Create Objects for Epic 3 (Student) and Epic 2 (Faculty)
+    Student student1("ST101", "Malik Muzammil", "Computer Science");
+    Student student2("ST102", "Zainab Naveed", "Software Engineering");
+    Faculty faculty1("FC201", "Dr. Ahmad", "Computer Science", "CS101");
 
-    instructor.displayFacultyDetails();
-    
-    CourseRegistrationSystem registrationSystem(30, 28);
+    // Display initial objects
+    student1.displayProfile();
+    student2.displayProfile();
+    faculty1.displayFaculty();
 
-    // Registering both team members as students in the test system
-    registrationSystem.registerCourse(student1, "CS-101");
+    // 2. Create Object for Epic 1 (University Management)
+    UniversityManagement ums("UMS Core System", 30, 29); // Capacity: 30, Current Enrolled: 29
+
+    // 3. Register Student 1 (Succeeds - Slot available)
+    ums.registerStudentToCourse(student1, "CS101");
     student1.displayProfile();
 
-    registrationSystem.registerCourse(student2, "CS-101");
+    // 4. Register Student 2 (Fails - Course capacity full)
+    ums.registerStudentToCourse(student2, "CS101");
     student2.displayProfile();
 
     return 0;
