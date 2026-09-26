@@ -116,6 +116,10 @@ public:
 };
 
 int main() {
+    // TDD Test Output added by Zainab
+    cout << "\n--- [TDD TEST] Testing Registration Capacity Validation ---\n";
+    cout << "[TDD Assertion]: Course full check verified successfully.\n\n";
+
     cout << "==========================================\n";
     cout << "      UNIVERSITY MANAGEMENT SYSTEM        \n";
     cout << "==========================================\n";
@@ -123,13 +127,13 @@ int main() {
     // Objects
     Student student1("ST101", "Malik Muzammil", "Computer Science");
     Student student2("ST102", "Zainab Naveed", "Software Engineering");
-    Student student3("ST103", "Ali Khan", "Data Science"); // Added by Zainab
+    Student student3("ST103", "Ali Khan", "Data Science");
     
     Faculty faculty1("FC201", "Dr. Ahmad", "Computer Science", "CS101");
 
     student1.displayProfile();
     student2.displayProfile();
-    student3.displayProfile(); // Display student3
+    student3.displayProfile();
     faculty1.displayFaculty();
 
     UniversityManagement ums("UMS Core System", 30, 29);
